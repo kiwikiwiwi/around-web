@@ -1,7 +1,7 @@
 import React from 'react';
-import { Modal, Button } from 'antd';
+import { Modal, Button, message } from 'antd';
 import { CreatePostForm } from './CreatePostForm';
-import {API_ROOT, POS_KEY, AUTH_HEADER} from "../constants";
+import { POS_KEY, API_ROOT, AUTH_HEADER, TOKEN_KEY } from '../constants';
 
 export class CreatePostButton extends React.Component {
     state = {
@@ -20,24 +20,35 @@ export class CreatePostButton extends React.Component {
         this.form.validateFields((err, values) => {
             if (!err) {
                 console.log(values);
-                const { lat, lon}
-                this.setState({
-                    confirmLoading: true,
-                });
+                const { lat, lon } = JSON.parse(localStorage.getItem(POS_KEY));
+                const token = localStorage.getItem(TOKEN_KEY);
+                const formData = new FormData();
+                formData.set('lat', lat);
+                formData.set('lon', lon);
+                formData.set('message', values.message);
+                formData.set('image', values.image[0].originFileObj);
 
-                fetch(`${API_ROOT}/post`,{
+                this.setState({ confirmLoading: true });
+                fetch(`${API_ROOT}/post`, {
                     method: 'POST',
-                    headers :{
+                    body: formData,
+                    headers: {
                         Authorization: `${AUTH_HEADER} ${token}`,
                     }
+                }).then((response) => {
+                    if (response.ok) {
+                        this.form.resetFields();
+                        this.setState({ visible: false, confirmLoading: false });
+                        return this.props.loadNearbyPosts();
+                    }
+                    throw new Error(response.statusText);
                 })
-
-                setTimeout(() => {
-                    this.setState({
-                        visible: false,
-                        confirmLoading: false,
+                    .then(() => message.success('Post created successfully!'))
+                    .catch((e) => {
+                        console.log(e);
+                        this.setState({ confirmLoading: false });
+                        message('Failed to create the post.');
                     });
-                }, 2000);
             }
         });
     }
@@ -49,7 +60,7 @@ export class CreatePostButton extends React.Component {
         });
     }
 
-    saveFormRef = (formInstance) => {
+    getFormRef = (formInstance) => {
         this.form = formInstance;
     }
 
@@ -67,7 +78,7 @@ export class CreatePostButton extends React.Component {
                        confirmLoading={confirmLoading}
                        onCancel={this.handleCancel}
                 >
-                    <CreatePostForm ref={this.saveFormRef}/>
+                    <CreatePostForm ref={this.getFormRef}/>
                 </Modal>
             </div>
         );

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Form, Upload, Icon, Input } from 'antd';
 
@@ -33,10 +34,7 @@ class NormalCreatePostForm extends React.Component {
                         <Input placeholder="Please input your message" />
                     )}
                 </FormItem>
-                <FormItem
-                    {...formItemLayout}
-                    label="Image"
-                >
+                <FormItem {...formItemLayout} label="Image" >
                     <div className="dropbox">
                         {getFieldDecorator('image', {
                             valuePropName: 'fileList',

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { API_ROOT } from '../constants';
@@ -27,8 +28,7 @@ class RegistrationForm extends React.Component {
                         return response;
                     }
                     throw new Error(response.statusText);
-                })
-                    .then((response) => response.text())
+                }).then((response) => response.text())
                     .then((response) => {
                         console.log(response);
                         message.success('Registration Succeed');
@@ -132,7 +132,7 @@ class RegistrationForm extends React.Component {
                 </FormItem>
                 <FormItem {...tailFormItemLayout}>
                     <Button type="primary" htmlType="submit">Register</Button>
-                    <p>I already have an account, go back to <Link to="/Login">login</Link></p>
+                    <p>I already have an account, go back to <Link to="/login">login</Link></p>
                 </FormItem>
             </Form>
         );
