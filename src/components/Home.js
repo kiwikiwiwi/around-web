@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Tabs, Spin, Row, Col, Radio } from 'antd';
 import { GEO_OPTIONS, POS_KEY, API_ROOT, AUTH_HEADER, TOKEN_KEY } from '../constants';
@@ -146,7 +145,6 @@ export class Home extends React.Component {
                 this.setState({ isLoadingPosts: false, error: 'Loading face images failed.'});
             });
     }
-
     render() {
         const operations = <CreatePostButton loadNearbyPosts={this.loadNearbyPosts}/>;
         return (
